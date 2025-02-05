@@ -121,8 +121,13 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.1;
+    public static final double kDriveDeadband = 0.2;
     public static final double kTriggerButtonThreshold = 0.2;
+  }
+
+  public static final class LimelightAutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = .1;
+    public static final double kMaxAngularSpeed = Math.PI / 10;
   }
 
   public static final class AutoConstants {
