@@ -32,7 +32,7 @@ public final class Configs {
           .velocityFF(drivingVelocityFeedForward)
           .outputRange(-1, 1);
 
-      turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(20);
+      turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(15);
       turningConfig
           .absoluteEncoder
           // Invert the turning encoder, since the output shaft rotates in the opposite
@@ -58,6 +58,7 @@ public final class Configs {
   public static final class CoralSubsystem {
     public static final SparkMaxConfig armConfig = new SparkMaxConfig();
     public static final SparkFlexConfig elevatorConfig = new SparkFlexConfig();
+    public static final SparkFlexConfig leftElevatorConfig = new SparkFlexConfig();
     public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
 
     static {
@@ -72,7 +73,7 @@ public final class Configs {
           .closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
           // Set PID values for position control
-          .p(0.1)
+          .p(0.05)
           .outputRange(-1, 1)
           .maxMotion
           // Set MAXMotion parameters for position control
@@ -80,8 +81,38 @@ public final class Configs {
           .maxAcceleration(10000)
           .allowedClosedLoopError(0.25);
 
+      leftElevatorConfig.inverted(false).idleMode(IdleMode.kCoast).smartCurrentLimit(50).voltageCompensation(12);
+      /*
+      * Configure the reverse limit switch for the elevator. By enabling the limit switch, this
+      * will prevent any actuation of the elevator in the reverse direction if the limit switch is
+      * pressed.
+      */
+      leftElevatorConfig
+      .limitSwitch
+      .reverseLimitSwitchEnabled(true)
+      .reverseLimitSwitchType(Type.kNormallyOpen);
+
+      /*
+       * Configure the closed loop controller. We want to make sure we set the
+       * feedback sensor as the primary encoder.
+       */
+      leftElevatorConfig
+          .closedLoop
+          .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+          // Set PID values for position control
+          .p(0.1)
+          .outputRange(-1, 1)
+          .maxMotion
+          // Set MAXMotion parameters for position control
+          .maxVelocity(4200)
+          .maxAcceleration(6000)
+          .allowedClosedLoopError(0.5);
+
+
+
+
       // Configure basic settings of the elevator motor
-      elevatorConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(50).voltageCompensation(12);
+      elevatorConfig.inverted(true).idleMode(IdleMode.kCoast).smartCurrentLimit(50).voltageCompensation(12);
 
       /*
        * Configure the reverse limit switch for the elevator. By enabling the limit switch, this
@@ -116,11 +147,11 @@ public final class Configs {
 
   public static final class AlgaeSubsystem {
     public static final SparkFlexConfig intakeConfig = new SparkFlexConfig();
-    public static final SparkFlexConfig armConfig = new SparkFlexConfig();
+    public static final SparkMaxConfig armConfig = new SparkMaxConfig();
 
     static {
       // Configure basic setting of the arm motor
-      armConfig.smartCurrentLimit(40);
+      armConfig.inverted(false).smartCurrentLimit(40);
 
       /*
        * Configure the closed loop controller. We want to make sure we set the

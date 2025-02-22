@@ -54,6 +54,16 @@ public class CoralSubsystem extends SubsystemBase {
       elevatorMotor.getClosedLoopController();
   private RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
 
+  // Initialize elevator SPARK. We will use MAXMotion position control for the elevator, so we also
+  // need to initialize the closed loop controller and encoder.
+  private SparkFlex leftElevatorMotor =
+      new SparkFlex(CoralSubsystemConstants.kLeftElevatorMotorCanID, MotorType.kBrushless);
+  private SparkClosedLoopController leftElevatorClosedLoopController =
+      leftElevatorMotor.getClosedLoopController();
+  private RelativeEncoder leftElevatorEncoder = leftElevatorMotor.getEncoder();
+
+
+
   // Initialize intake SPARK. We will use open loop control for this so we don't need a closed loop
   // controller like above.
   private SparkMax intakeMotor =
@@ -134,6 +144,12 @@ public class CoralSubsystem extends SubsystemBase {
         Configs.CoralSubsystem.elevatorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
+
+      leftElevatorMotor.configure(
+        Configs.CoralSubsystem.leftElevatorConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+
     intakeMotor.configure(
         Configs.CoralSubsystem.intakeConfig,
         ResetMode.kResetSafeParameters,
@@ -145,6 +161,7 @@ public class CoralSubsystem extends SubsystemBase {
     // Zero arm and elevator encoders on initialization
     armEncoder.setPosition(0);
     elevatorEncoder.setPosition(0);
+    leftElevatorEncoder.setPosition(0);
 
     // Initialize simulation values
     elevatorMotorSim = new SparkFlexSim(elevatorMotor, elevatorMotorModel);
@@ -161,16 +178,19 @@ public class CoralSubsystem extends SubsystemBase {
     armController.setReference(armCurrentTarget, ControlType.kMAXMotionPositionControl);
     elevatorClosedLoopController.setReference(
         elevatorCurrentTarget, ControlType.kMAXMotionPositionControl);
+    leftElevatorClosedLoopController.setReference(
+        elevatorCurrentTarget, ControlType.kMAXMotionPositionControl);
   }
 
   /** Zero the elevator encoder when the limit switch is pressed. */
   private void zeroElevatorOnLimitSwitch() {
-    if (!wasResetByLimit && elevatorMotor.getReverseLimitSwitch().isPressed()) {
+    if (!wasResetByLimit && leftElevatorMotor.getReverseLimitSwitch().isPressed()) {
       // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
       // prevent constant zeroing while pressed
       elevatorEncoder.setPosition(0);
+      leftElevatorEncoder.setPosition(0);
       wasResetByLimit = true;
-    } else if (!elevatorMotor.getReverseLimitSwitch().isPressed()) {
+    } else if (!leftElevatorMotor.getReverseLimitSwitch().isPressed()) {
       wasResetByLimit = false;
     }
   }
@@ -183,6 +203,7 @@ public class CoralSubsystem extends SubsystemBase {
       wasResetByButton = true;
       armEncoder.setPosition(0);
       elevatorEncoder.setPosition(0);
+      leftElevatorEncoder.setPosition(0);
     } else if (!RobotController.getUserButton()) {
       wasResetByButton = false;
     }
@@ -248,6 +269,7 @@ public class CoralSubsystem extends SubsystemBase {
     moveToSetpoint();
     zeroElevatorOnLimitSwitch();
     zeroOnUserButton();
+    System.out.println(elevatorEncoder.getPosition());
 
     // Display subsystem values
     SmartDashboard.putNumber("Coral/Arm/Target Position", armCurrentTarget);

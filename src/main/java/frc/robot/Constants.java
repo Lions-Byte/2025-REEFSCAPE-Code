@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -20,16 +22,17 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static final class CoralSubsystemConstants {
-    public static final int kElevatorMotorCanId = 25;
-    public static final int kArmMotorCanId = 20;
-    public static final int kIntakeMotorCanId = 15;
+    public static final int kElevatorMotorCanId = 10;
+    public static final int kLeftElevatorMotorCanID = 11;
+    public static final int kArmMotorCanId = 12;
+    public static final int kIntakeMotorCanId = 13;
 
     public static final class ElevatorSetpoints {
       public static final int kFeederStation = 0;
       public static final int kLevel1 = 0;
-      public static final int kLevel2 = 0;
-      public static final int kLevel3 = 100;
-      public static final int kLevel4 = 150;
+      public static final int kLevel2 = 10;
+      public static final int kLevel3 = 30;
+      public static final int kLevel4 = 90;
     }
 
     public static final class ArmSetpoints {
@@ -47,13 +50,13 @@ public final class Constants {
   }
 
   public static final class AlgaeSubsystemConstants {
-    public static final int kIntakeMotorCanId = 13;
+    public static final int kIntakeMotorCanId = 15;
     public static final int kPivotMotorCanId = 14;
 
     public static final class ArmSetpoints {
-      public static final double kStow = 18.5;
-      public static final double kHold = 11.5;
-      public static final double kDown = 0;
+      public static final double kStow = 0;
+      public static final double kHold = 0;
+      public static final double kDown = -6;
     }
 
     public static final class IntakeSetpoints {
@@ -86,6 +89,9 @@ public final class Constants {
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+
+    public static final PIDConstants translationConstants = new PIDConstants(0.04, 0, 0);
+    public static final PIDConstants rotationConstants = new PIDConstants(1, 0, 0);
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
@@ -153,7 +159,7 @@ public final class Constants {
   public static final class SimulationRobotConstants {
     public static final double kPixelsPerMeter = 20;
 
-    public static final double kElevatorGearing = 25; // 25:1
+    public static final double kElevatorGearing = 1; // 1:1
     public static final double kCarriageMass =
         4.3 + 3.15 + 0.151; // Kg, arm + elevator stage + chain
     public static final double kElevatorDrumRadius = 0.0328 / 2.0; // m

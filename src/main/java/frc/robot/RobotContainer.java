@@ -102,8 +102,8 @@ public class RobotContainer {
                 .alongWith(m_algaeSubsystem.stowCommand()));
 
     // A Button -> Elevator/Arm to level 2 position
-    //m_driverController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
-    m_driverController.a().whileTrue(new AimingRangingWSwerve(m_robotDrive, m_driverController));
+    m_driverController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    //m_driverController.a().whileTrue(new AimingRangingWSwerve(m_robotDrive, m_driverController));
     // X Button -> Elevator/Arm to level 3 position
     m_driverController.x().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
 
