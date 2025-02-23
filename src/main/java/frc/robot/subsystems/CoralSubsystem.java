@@ -184,7 +184,7 @@ public class CoralSubsystem extends SubsystemBase {
 
   /** Zero the elevator encoder when the limit switch is pressed. */
   private void zeroElevatorOnLimitSwitch() {
-    if (!wasResetByLimit && leftElevatorMotor.getReverseLimitSwitch().isPressed()) {
+    if (!wasResetByLimit && elevatorMotor.getReverseLimitSwitch().isPressed()) {
       // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
       // prevent constant zeroing while pressed
       elevatorEncoder.setPosition(0);
@@ -269,7 +269,7 @@ public class CoralSubsystem extends SubsystemBase {
     moveToSetpoint();
     zeroElevatorOnLimitSwitch();
     zeroOnUserButton();
-    System.out.println(elevatorEncoder.getPosition());
+    System.out.println(armEncoder.getPosition());
 
     // Display subsystem values
     SmartDashboard.putNumber("Coral/Arm/Target Position", armCurrentTarget);

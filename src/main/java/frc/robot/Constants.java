@@ -30,17 +30,17 @@ public final class Constants {
     public static final class ElevatorSetpoints {
       public static final int kFeederStation = 0;
       public static final int kLevel1 = 0;
-      public static final int kLevel2 = 10;
-      public static final int kLevel3 = 30;
+      public static final int kLevel2 = 5;
+      public static final int kLevel3 = 10;
       public static final int kLevel4 = 90;
     }
 
     public static final class ArmSetpoints {
-      public static final double kFeederStation = 33;
+      public static final double kFeederStation = 10;
       public static final double kLevel1 = 0;
-      public static final double kLevel2 = 2;
-      public static final double kLevel3 = 2;
-      public static final double kLevel4 = 19;
+      public static final double kLevel2 = 3;
+      public static final double kLevel3 = 5;
+      public static final double kLevel4 = 10;
     }
 
     public static final class IntakeSetpoints {

@@ -58,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
           DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   private final Pigeon2 m_pigeon2 = new Pigeon2(15);
 
 
@@ -263,13 +263,5 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
 
-  /**
-   * Returns the turn rate of the robot.
-   *
-   * @return The turn rate of the robot, in degrees per second
-   */
-  public double getTurnRate() {
-    return m_gyro.getRate(IMUAxis.kZ) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  }
   
 }
