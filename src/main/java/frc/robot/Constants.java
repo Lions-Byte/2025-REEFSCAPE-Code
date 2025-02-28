@@ -29,18 +29,19 @@ public final class Constants {
 
     public static final class ElevatorSetpoints {
       public static final int kFeederStation = 0;
-      public static final int kLevel1 = 0;
-      public static final int kLevel2 = 5;
-      public static final int kLevel3 = 10;
+      public static final int kLevel1 = 10;
+      public static final int kLevel2 = 10;
+      public static final int kLevel3 = 45;
       public static final int kLevel4 = 90;
     }
 
     public static final class ArmSetpoints {
-      public static final double kFeederStation = 10;
+      public static final double kFeederStation = 0;
       public static final double kLevel1 = 0;
-      public static final double kLevel2 = 3;
-      public static final double kLevel3 = 5;
-      public static final double kLevel4 = 10;
+      public static final double kLevel2 = 10;
+      public static final double kLevel3 = 10;
+      public static final double kLevel4 = 10; //tune dis mf
+      public static final double kRemoveAlgae = 20;
     }
 
     public static final class IntakeSetpoints {

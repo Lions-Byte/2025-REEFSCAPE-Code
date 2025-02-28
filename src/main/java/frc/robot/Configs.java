@@ -104,8 +104,8 @@ public final class Configs {
           .outputRange(-1, 1)
           .maxMotion
           // Set MAXMotion parameters for position control
-          .maxVelocity(4200)
-          .maxAcceleration(6000)
+          .maxVelocity(2100)
+          .maxAcceleration(3000)
           .allowedClosedLoopError(0.5);
 
 
@@ -136,10 +136,11 @@ public final class Configs {
           .outputRange(-1, 1)
           .maxMotion
           // Set MAXMotion parameters for position control
-          .maxVelocity(4200)
-          .maxAcceleration(6000)
+          .maxVelocity(2100)
+          .maxAcceleration(3000)
           .allowedClosedLoopError(0.5);
-
+//V = 4200
+//A = 6000
       // Configure basic settings of the intake motor
       intakeConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(40);
     }
@@ -151,7 +152,7 @@ public final class Configs {
 
     static {
       // Configure basic setting of the arm motor
-      armConfig.inverted(false).smartCurrentLimit(40);
+      armConfig.idleMode(IdleMode.kBrake).inverted(false).smartCurrentLimit(40);
 
       /*
        * Configure the closed loop controller. We want to make sure we set the

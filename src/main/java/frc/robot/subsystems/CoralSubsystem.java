@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Configs;
 import frc.robot.Constants.CoralSubsystemConstants;
 import frc.robot.Constants.CoralSubsystemConstants.ArmSetpoints;
@@ -68,6 +69,7 @@ public class CoralSubsystem extends SubsystemBase {
   // controller like above.
   private SparkMax intakeMotor =
       new SparkMax(CoralSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
+      private RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
 
   // Member variables for subsystem state management
   private boolean wasResetByButton = false;
@@ -214,6 +216,11 @@ public class CoralSubsystem extends SubsystemBase {
     intakeMotor.set(power);
   }
 
+  public Command removeAlgae()
+  {
+    return this.runOnce( () -> armCurrentTarget = ArmSetpoints.kRemoveAlgae);
+  }
+
   /**
    * Command to set the subsystem setpoint. This will set the arm and elevator to their predefined
    * positions for the given setpoint.
@@ -252,8 +259,15 @@ public class CoralSubsystem extends SubsystemBase {
    */
   public Command runIntakeCommand() {
     return this.startEnd(
-        () -> this.setIntakePower(IntakeSetpoints.kForward), () -> this.setIntakePower(0.0));
-  }
+        () -> {
+            intakeEncoder.setPosition(0);  // Reset encoder position
+            this.setIntakePower(IntakeSetpoints.kForward);  // Start intake
+        },
+        () -> {this.setIntakePower(0.0);  // Stop intake
+              setSetpointCommand(Setpoint.kLevel1);
+        }
+    ).until(() -> intakeEncoder.getPosition() >= 10);  // Interrupt when position reaches 10
+}
 
   /**
    * Command to reverses the intake motor. When the command is interrupted, e.g. the button is
@@ -269,7 +283,7 @@ public class CoralSubsystem extends SubsystemBase {
     moveToSetpoint();
     zeroElevatorOnLimitSwitch();
     zeroOnUserButton();
-    System.out.println(armEncoder.getPosition());
+    System.out.println(elevatorEncoder.getPosition());
 
     // Display subsystem values
     SmartDashboard.putNumber("Coral/Arm/Target Position", armCurrentTarget);

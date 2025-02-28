@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,7 +35,9 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    
+    CameraServer.addServer("cam 1");
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(160, 120);
   }
 
   /**
