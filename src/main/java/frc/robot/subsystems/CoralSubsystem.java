@@ -69,6 +69,7 @@ public class CoralSubsystem extends SubsystemBase {
   // controller like above.
   private SparkMax intakeMotor =
       new SparkMax(CoralSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
+      private SparkClosedLoopController intakeController = intakeMotor.getClosedLoopController();
       private RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
 
   // Member variables for subsystem state management
@@ -257,17 +258,15 @@ public class CoralSubsystem extends SubsystemBase {
    * Command to run the intake motor. When the command is interrupted, e.g. the button is released,
    * the motor will stop.
    */
-  public Command runIntakeCommand() {
+
+
+
+
+   public Command runIntakeCommand() {
     return this.startEnd(
-        () -> {
-            intakeEncoder.setPosition(0);  // Reset encoder position
-            this.setIntakePower(IntakeSetpoints.kForward);  // Start intake
-        },
-        () -> {this.setIntakePower(0.0);  // Stop intake
-              setSetpointCommand(Setpoint.kLevel1);
-        }
-    ).until(() -> intakeEncoder.getPosition() >= 10);  // Interrupt when position reaches 10
-}
+        () -> this.setIntakePower(IntakeSetpoints.kForward), () -> this.setIntakePower(0.0));
+  }
+
 
   /**
    * Command to reverses the intake motor. When the command is interrupted, e.g. the button is
@@ -283,8 +282,8 @@ public class CoralSubsystem extends SubsystemBase {
     moveToSetpoint();
     zeroElevatorOnLimitSwitch();
     zeroOnUserButton();
-    System.out.println(elevatorEncoder.getPosition());
-
+    System.out.println("elevator encoder:" + elevatorEncoder.getPosition());
+    System.out.println("arm encoder:" + armEncoder.getPosition());
     // Display subsystem values
     SmartDashboard.putNumber("Coral/Arm/Target Position", armCurrentTarget);
     SmartDashboard.putNumber("Coral/Arm/Actual Position", armEncoder.getPosition());

@@ -46,7 +46,8 @@ public class RobotContainer {
 
     CommandXboxController m_driverController =
     new CommandXboxController(OIConstants.kDriverControllerPort);
-  // The robot's subsystems
+    CommandXboxController m_operatorController = 
+    new CommandXboxController(OIConstants.kOperatorControllerPort);    // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final CoralSubsystem m_coralSubSystem = new CoralSubsystem();
   private final AlgaeSubsystem m_algaeSubsystem = new AlgaeSubsystem();
@@ -98,28 +99,28 @@ public class RobotContainer {
     m_driverController.rightStick().onTrue(m_coralSubSystem.removeAlgae());
 
     // Right Bumper -> Run tube intake
-    m_driverController.rightBumper().onTrue(m_coralSubSystem.runIntakeCommand()
-    .alongWith(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation)));
-
+    m_driverController.rightBumper().whileTrue(m_coralSubSystem.runIntakeCommand());
+    //m_driverController.rightBumper().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+    //.alongWith(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation))
     // Left Bumper -> Run tube intake in reverse
     m_driverController.leftBumper().whileTrue(m_coralSubSystem.reverseIntakeCommand());
 
     // B Button -> Elevator/Arm to human player position, set ball intake to stow
     // when idle
-    m_driverController.b().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
+    m_operatorController.b().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
         //.onTrue(
             //m_coralSubSystem
                 //.setSetpointCommand(Setpoint.kFeederStation)
                 //.alongWith(m_algaeSubsystem.stowCommand()));
 
     // A Button -> Elevator/Arm to level 2 position
-    m_driverController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    m_operatorController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
     //m_driverController.a().whileTrue(new AimingRangingWSwerve(m_robotDrive, m_driverController));
     // X Button -> Elevator/Arm to level 3 position
-    m_driverController.x().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
-
+    m_driverController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+    m_driverController.y().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
     // Y Button -> Elevator/Arm to level 4 position
-    m_driverController.y().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
+    m_operatorController.y().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
 
     // Right Trigger -> Run ball intake, set to leave out when idle
     m_driverController
@@ -147,49 +148,47 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return new PathPlannerAuto("Example Auto");
-        // Create config for trajectory
-        TrajectoryConfig config =
-            new TrajectoryConfig(
-                    AutoConstants.kMaxSpeedMetersPerSecond,
-                    AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                // Add kinematics to ensure max speed is actually obeyed
-                .setKinematics(DriveConstants.kDriveKinematics);
-    
-        // An example trajectory to follow. All units in meters.
-        Trajectory exampleTrajectory =
-            TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(.2, 0), new Translation2d(.5, 0)),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1, 0, new Rotation2d(0)),
-                config);
-    
-        var thetaController =
-            new ProfiledPIDController(
-                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    
-        SwerveControllerCommand swerveControllerCommand =
-            new SwerveControllerCommand(
-                exampleTrajectory,
-                m_robotDrive::getPose, // Functional interface to feed supplier
-                DriveConstants.kDriveKinematics,
-    
-                // Position controllers
-                new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
-                thetaController,
-                m_robotDrive::setModuleStates,
-                m_robotDrive);
-    
-        // Reset odometry to the starting pose of the trajectory.
-        m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-    
-        // Run path following command, then stop at the end.
-        return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
-      
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(DriveConstants.kDriveKinematics);
+
+    // An example trajectory to follow. All units in meters.
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            config);
+
+    var thetaController =
+        new ProfiledPIDController(
+            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    SwerveControllerCommand swerveControllerCommand =
+        new SwerveControllerCommand(
+            exampleTrajectory,
+            m_robotDrive::getPose, // Functional interface to feed supplier
+            DriveConstants.kDriveKinematics,
+
+            // Position controllers
+            new PIDController(AutoConstants.kPXController, 0, 0),
+            new PIDController(AutoConstants.kPYController, 0, 0),
+            thetaController,
+            m_robotDrive::setModuleStates,
+            m_robotDrive);
+
+    // Reset odometry to the starting pose of the trajectory.
+    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
   }
 }

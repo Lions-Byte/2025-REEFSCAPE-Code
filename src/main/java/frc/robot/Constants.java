@@ -29,9 +29,9 @@ public final class Constants {
 
     public static final class ElevatorSetpoints {
       public static final int kFeederStation = 0;
-      public static final int kLevel1 = 10;
+      public static final int kLevel1 = 30;
       public static final int kLevel2 = 10;
-      public static final int kLevel3 = 45;
+      public static final int kLevel3 = 52;
       public static final int kLevel4 = 90;
     }
 
@@ -39,14 +39,14 @@ public final class Constants {
       public static final double kFeederStation = 0;
       public static final double kLevel1 = 0;
       public static final double kLevel2 = 10;
-      public static final double kLevel3 = 10;
-      public static final double kLevel4 = 10; //tune dis mf
-      public static final double kRemoveAlgae = 20;
+      public static final double kLevel3 = 7;
+      public static final double kLevel4 = 12; //tune dis mf
+      public static final double kRemoveAlgae = 22;
     }
 
     public static final class IntakeSetpoints {
-      public static final double kForward = 0.5;
-      public static final double kReverse = -0.5;
+      public static final double kForward = -.5;
+      public static final double kReverse = .5;
     }
   }
 
@@ -55,9 +55,9 @@ public final class Constants {
     public static final int kPivotMotorCanId = 14;
 
     public static final class ArmSetpoints {
-      public static final double kStow = 0;
-      public static final double kHold = 0;
-      public static final double kDown = -6;
+      public static final double kStow = 1;
+      public static final double kHold = -15;
+      public static final double kDown = -25;
     }
 
     public static final class IntakeSetpoints {
@@ -128,6 +128,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
     public static final double kDriveDeadband = 0.2;
     public static final double kTriggerButtonThreshold = 0.2;
   }
