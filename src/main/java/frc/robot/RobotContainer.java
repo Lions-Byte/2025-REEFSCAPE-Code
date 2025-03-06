@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.command.AimingRangingWSwerve;
+import frc.robot.command.centerTarget;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.CoralSubsystem.Setpoint;
@@ -100,10 +100,12 @@ public class RobotContainer {
 
     // Right Bumper -> Run tube intake
     m_driverController.rightBumper().whileTrue(m_coralSubSystem.runIntakeCommand());
+    //m_operatorController.rightBumper().whileTrue(m_coralSubSystem.runIntakeCommand());
     //m_driverController.rightBumper().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
     //.alongWith(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation))
     // Left Bumper -> Run tube intake in reverse
     m_driverController.leftBumper().whileTrue(m_coralSubSystem.reverseIntakeCommand());
+    
 
     // B Button -> Elevator/Arm to human player position, set ball intake to stow
     // when idle
@@ -115,10 +117,18 @@ public class RobotContainer {
 
     // A Button -> Elevator/Arm to level 2 position
     m_operatorController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
-    //m_driverController.a().whileTrue(new AimingRangingWSwerve(m_robotDrive, m_driverController));
+    
     // X Button -> Elevator/Arm to level 3 position
-    m_driverController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
-    m_driverController.y().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
+    
+    m_operatorController
+    .leftTrigger(OIConstants.kTriggerButtonThreshold)
+    .onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+
+
+    
+    m_operatorController
+    .rightTrigger(OIConstants.kTriggerButtonThreshold)
+    .onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
     // Y Button -> Elevator/Arm to level 4 position
     m_operatorController.y().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
 
@@ -134,6 +144,25 @@ public class RobotContainer {
 
     // Start Button -> Zero swerve heading
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
+
+
+    m_driverController.b().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+    m_driverController.a().whileTrue(new centerTarget(m_robotDrive, m_driverController));
+    //m_driverController.a().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    m_driverController.x().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
+    m_driverController.y().onTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
+    /*m_driverController.b().OnTrue(m_coralSubsystem.test)
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+
+
+
+
+
   }
 
   public double getSimulationTotalCurrentDraw() {

@@ -14,15 +14,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 
-public class AimingRangingWSwerve extends Command{
+public class centerTarget extends Command{
     private final DriveSubsystem m_drive;
     private final CommandXboxController m_driverController;
+    
 
 
     double limelight_range_proportional()
     {    
     double kP = .1;
-    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
+    double targetingForwardSpeed = LimelightHelpers.getTY("limelight-limeone") * kP;
     targetingForwardSpeed *= LimelightAutoConstants.kMaxSpeedMetersPerSecond;
     targetingForwardSpeed *= -1.0;
     return targetingForwardSpeed;
@@ -39,19 +40,19 @@ public class AimingRangingWSwerve extends Command{
 
     // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the rightmost edge of 
     // your limelight 3 feed, tx should return roughly 31 degrees.
-    double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kP;
+    double targetingAngularVelocity = LimelightHelpers.getTX("limelight-limeone") * kP;
 
     // convert to radians per second for our drive method
     targetingAngularVelocity *= LimelightAutoConstants.kMaxAngularSpeed;
 
     //invert since tx is positive when the target is to the right of the crosshair
-    targetingAngularVelocity *= -1.0;
+    targetingAngularVelocity *= 1.0;
 
     return targetingAngularVelocity;
   }
 
 
-public AimingRangingWSwerve(DriveSubsystem drive, CommandXboxController controller)
+public centerTarget(DriveSubsystem drive, CommandXboxController controller)
 {
     m_drive = drive;
     m_driverController = controller;
@@ -65,7 +66,12 @@ public void initialize()
 @Override
 public void execute() 
 {
-    m_drive.drive(limelight_range_proportional(), 0, limelight_aim_proportional(), false);
+    m_drive.drive(
+        -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband), 
+        limelight_aim_proportional(), 
+        -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband), 
+        false);
+    System.out.println("TX: " + LimelightHelpers.getTX("limelight-limeone"));
 }
 //MathUtil.applyDeadband(m_driverController.getLeftY()
 @Override

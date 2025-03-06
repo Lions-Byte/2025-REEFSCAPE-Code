@@ -265,9 +265,41 @@ public class CoralSubsystem extends SubsystemBase {
    public Command runIntakeCommand() {
     return this.startEnd(
         () -> this.setIntakePower(IntakeSetpoints.kForward), () -> this.setIntakePower(0.0));
+
+  }
+  
+  
+  public Command runIntake()
+  {
+
+    
+      return this.runOnce(
+        () -> {
+            intakeEncoder.setPosition(0);  // Reset encoder position
+            this.setIntakePower(IntakeSetpoints.kForward);  // Start intake
+            if(intakeEncoder.getPosition() > 10)
+            {
+              this.setIntakePower(0);
+            }
+        }
+
+    );
   }
 
-
+  /*intakeEncoder.setPosition(0);
+  while(intakeEncoder.getPosition() < 3)
+    {
+    this.setIntakePower(.2);
+    }
+  this.setIntakePower(0);
+  */
+  //}
+  /* 
+  public Command testElevatorWIntake(Setpoint level) {
+    return this.runOnce()
+        /
+  }
+*/
   /**
    * Command to reverses the intake motor. When the command is interrupted, e.g. the button is
    * released, the motor will stop.
@@ -282,8 +314,8 @@ public class CoralSubsystem extends SubsystemBase {
     moveToSetpoint();
     zeroElevatorOnLimitSwitch();
     zeroOnUserButton();
-    System.out.println("elevator encoder:" + elevatorEncoder.getPosition());
-    System.out.println("arm encoder:" + armEncoder.getPosition());
+    //System.out.println("arm encoder:" + armEncoder.getPosition());
+    //System.out.println("elevator encoder:" + elevatorEncoder.getPosition());
     // Display subsystem values
     SmartDashboard.putNumber("Coral/Arm/Target Position", armCurrentTarget);
     SmartDashboard.putNumber("Coral/Arm/Actual Position", armEncoder.getPosition());
