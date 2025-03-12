@@ -19,7 +19,7 @@ public final class Configs {
       double turningFactor = 2 * Math.PI;
       double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
 
-      drivingConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(50);
+      drivingConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(50);
       drivingConfig
           .encoder
           .positionConversionFactor(drivingFactor) // meters

@@ -31,16 +31,16 @@ public final class Constants {
       public static final int kFeederStation = 0;
       public static final int kLevel1 = 30;
       public static final int kLevel2 = 10;
-      public static final int kLevel3 = 42;
-      public static final int kLevel4 = 90;
+      public static final int kLevel3 = 40;
+      public static final int kLevel4 = 92;
     }
 
     public static final class ArmSetpoints {
       public static final double kFeederStation = -21;
       public static final double kLevel1 = 0;
-      public static final double kLevel2 = 10;
-      public static final double kLevel3 = 10;
-      public static final double kLevel4 = 10; //tune dis mf
+      public static final double kLevel2 = 11;
+      public static final double kLevel3 = 11;
+      public static final double kLevel4 = 11; //tune dis mf
       public static final double kRemoveAlgae = 22;
     }
 
@@ -139,10 +139,10 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    public static final double kMaxSpeedMetersPerSecond = .5;//3
+    public static final double kMaxAccelerationMetersPerSecondSquared = .5; //3
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 10;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI / 10;
 
     public static final double kPXController = 1;
     public static final double kPYController = 1;

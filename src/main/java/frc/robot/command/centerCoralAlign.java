@@ -7,25 +7,26 @@ import frc.robot.Constants.LimelightAutoConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.MathUtil;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 
 
 
-public class centerTarget extends Command{
+public class centerCoralAlign extends Command{
     private final DriveSubsystem m_drive;
     private final CommandXboxController m_driverController;
     
 
-
     double limelight_range_proportional()
     {    
     double kP = .1;
-    double targetingForwardSpeed = LimelightHelpers.getTY("limelight-feeder") * kP;
+    double targetingForwardSpeed = LimelightHelpers.getTY("limelight-main") * kP;
+    //double targetingForwardSpeed = (LimelightHelpers.getTA("limelight-main")-.15) * kP;
+    System.out.println((LimelightHelpers.getTA("limelight-main")-.15) * kP);
     targetingForwardSpeed *= LimelightAutoConstants.kMaxSpeedMetersPerSecond;
-    targetingForwardSpeed *= -1.0;
+    targetingForwardSpeed *= 1.0;
     return targetingForwardSpeed;
     }
 
@@ -40,19 +41,19 @@ public class centerTarget extends Command{
 
     // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the rightmost edge of 
     // your limelight 3 feed, tx should return roughly 31 degrees.
-    double targetingAngularVelocity = LimelightHelpers.getTX("limelight-feeder") * kP;
+    double targetingAngularVelocity = LimelightHelpers.getTX("limelight-main") * kP;
 
     // convert to radians per second for our drive method
     targetingAngularVelocity *= LimelightAutoConstants.kMaxAngularSpeed;
 
     //invert since tx is positive when the target is to the right of the crosshair
-    targetingAngularVelocity *= 1.0;
+    targetingAngularVelocity *= -1.0;
 
     return targetingAngularVelocity;
   }
 
 
-public centerTarget(DriveSubsystem drive, CommandXboxController controller)
+public centerCoralAlign(DriveSubsystem drive, CommandXboxController controller)
 {
     m_drive = drive;
     m_driverController = controller;
@@ -62,6 +63,7 @@ public centerTarget(DriveSubsystem drive, CommandXboxController controller)
 public void initialize()
 {
     m_drive.drive(0, 0, 0, false);
+    LimelightHelpers.setPipelineIndex("limelight-main", 1);
 }
 @Override
 public void execute() 
@@ -71,7 +73,10 @@ public void execute()
         limelight_aim_proportional(), 
         -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband), 
         false);
-    System.out.println("TX: " + LimelightHelpers.getTX("limelight-feeder"));
+        System.out.println(LimelightHelpers.getTX("limelight-main"));
+        System.out.println(LimelightHelpers.getCurrentPipelineIndex("limelight-main"));
+        SmartDashboard.putBoolean("isFlush", ((LimelightHelpers.getTA("limelight-main") > .3)));
+        SmartDashboard.putNumber("baseflush", LimelightHelpers.getTA("limelight-main"));
 }
 //MathUtil.applyDeadband(m_driverController.getLeftY()
 @Override
@@ -81,6 +86,7 @@ public void end(boolean interrupted)
 }
 
 
+ 
 
 
 }
