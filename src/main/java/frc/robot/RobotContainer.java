@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.auto.moveToTarget;
+import frc.robot.auto.rightAlign;
 import frc.robot.command.centerTarget;
 import frc.robot.command.leftCoralAlign;
 import frc.robot.command.rightCoralAlign;
@@ -185,8 +187,8 @@ public class RobotContainer {
      * 
      * 
      */
-    m_homeButton.whileTrue(new centerTarget(m_robotDrive, m_driverController).alongWith(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation)));
-    m_loadButton.whileTrue(m_coralSubSystem.runIntakeCommand());
+    m_homeButton.whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kHome));
+    m_loadButton.whileTrue(m_coralSubSystem.feederStation().alongWith(new centerTarget(m_robotDrive, m_driverController)));
     m_shootButton.whileTrue(m_coralSubSystem.reverseIntakeCommand());
     m_leftL2Button.whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2).alongWith(new leftCoralAlign(m_robotDrive, m_driverController)));
     m_rightL2Button.whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2).alongWith(new rightCoralAlign(m_robotDrive, m_driverController)));
@@ -210,7 +212,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
+    return new moveToTarget(m_robotDrive).andThen(new rightAlign(m_robotDrive)).andThen(m_coralSubSystem.reverseIntakeCommand());
+   /*  // Create config for trajectory
     TrajectoryConfig config =
         new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
@@ -224,9 +227,9 @@ public class RobotContainer {
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
+            List.of(new Translation2d(.5, 0), new Translation2d(1, 0)),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
+            new Pose2d(2, 0, new Rotation2d(0)),
             config);
 
     var thetaController =
@@ -254,5 +257,7 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+
+    */
   }
 }

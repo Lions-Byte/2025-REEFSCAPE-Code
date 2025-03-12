@@ -33,6 +33,7 @@ import frc.robot.Constants.SimulationRobotConstants;
 public class CoralSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum Setpoint {
+    kHome,
     kFeederStation,
     kLevel1,
     kLevel2,
@@ -226,6 +227,18 @@ public class CoralSubsystem extends SubsystemBase {
    * Command to set the subsystem setpoint. This will set the arm and elevator to their predefined
    * positions for the given setpoint.
    */
+  public Command feederStation()
+  {
+    return this.startEnd(
+        () -> {
+          this.setIntakePower(IntakeSetpoints.kForward);
+          armCurrentTarget = ArmSetpoints.kFeederStation;
+          elevatorCurrentTarget = ElevatorSetpoints.kFeederStation;
+        }, () -> this.setIntakePower(0.0));
+
+  }
+
+
   public Command setSetpointCommand(Setpoint setpoint) {
     return this.runOnce(
         () -> {
@@ -237,6 +250,10 @@ public class CoralSubsystem extends SubsystemBase {
             case kLevel1:
               armCurrentTarget = ArmSetpoints.kLevel1;
               elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
+              break;
+              case kHome:
+              armCurrentTarget = ArmSetpoints.kHome;
+              elevatorCurrentTarget = ElevatorSetpoints.kHome;
               break;
             case kLevel2:
               armCurrentTarget = ArmSetpoints.kLevel2;

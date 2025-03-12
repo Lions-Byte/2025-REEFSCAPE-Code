@@ -23,8 +23,6 @@ public class centerCoralAlign extends Command{
     {    
     double kP = .1;
     double targetingForwardSpeed = LimelightHelpers.getTY("limelight-main") * kP;
-    //double targetingForwardSpeed = (LimelightHelpers.getTA("limelight-main")-.15) * kP;
-    System.out.println((LimelightHelpers.getTA("limelight-main")-.15) * kP);
     targetingForwardSpeed *= LimelightAutoConstants.kMaxSpeedMetersPerSecond;
     targetingForwardSpeed *= 1.0;
     return targetingForwardSpeed;
@@ -69,14 +67,12 @@ public void initialize()
 public void execute() 
 {
     m_drive.drive(
-        -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband), 
+        -MathUtil.applyDeadband(m_driverController.getLeftY() / 2, OIConstants.kDriveDeadband), 
         limelight_aim_proportional(), 
         -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband), 
         false);
-        System.out.println(LimelightHelpers.getTX("limelight-main"));
-        System.out.println(LimelightHelpers.getCurrentPipelineIndex("limelight-main"));
-        SmartDashboard.putBoolean("isFlush", ((LimelightHelpers.getTA("limelight-main") > .3)));
-        SmartDashboard.putNumber("baseflush", LimelightHelpers.getTA("limelight-main"));
+        System.out.println("tx" + LimelightHelpers.getTX("limelight-main"));
+        System.out.println("tA" + LimelightHelpers.getTA("limelight-main"));
 }
 //MathUtil.applyDeadband(m_driverController.getLeftY()
 @Override

@@ -67,7 +67,7 @@ public void initialize()
 public void execute() 
 {
     m_drive.drive(
-        -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband), 
+        -MathUtil.applyDeadband(m_driverController.getLeftY() / 2, OIConstants.kDriveDeadband), 
         limelight_aim_proportional(), 
         -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband), 
         false);

@@ -28,6 +28,7 @@ public final class Constants {
     public static final int kIntakeMotorCanId = 13;
 
     public static final class ElevatorSetpoints {
+      public static final int kHome = 0;
       public static final int kFeederStation = 0;
       public static final int kLevel1 = 30;
       public static final int kLevel2 = 10;
@@ -36,6 +37,7 @@ public final class Constants {
     }
 
     public static final class ArmSetpoints {
+      public static final int kHome = 0;
       public static final double kFeederStation = -21;
       public static final double kLevel1 = 0;
       public static final double kLevel2 = 11;
@@ -45,8 +47,8 @@ public final class Constants {
     }
 
     public static final class IntakeSetpoints {
-      public static final double kForward = -.3;
-      public static final double kReverse = .2;
+      public static final double kForward = -.9;
+      public static final double kReverse = .6;
     }
   }
 
@@ -55,7 +57,7 @@ public final class Constants {
     public static final int kPivotMotorCanId = 14;
 
     public static final class ArmSetpoints {
-      public static final double kStow = 0;
+      public static final double kStow = -10;
       public static final double kHold = -20;
       public static final double kDown = -25;
     }
@@ -141,8 +143,8 @@ public final class Constants {
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = .5;//3
     public static final double kMaxAccelerationMetersPerSecondSquared = .5; //3
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 10;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI / 10;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI / 10; // Math.PI
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI / 10; // Math.PI
 
     public static final double kPXController = 1;
     public static final double kPYController = 1;
